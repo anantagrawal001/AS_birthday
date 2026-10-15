@@ -1,7 +1,6 @@
 import React from 'react';
 import { BIRTHDAY } from '../content/config';
 import { PhotoPicture } from '../components/PhotoPicture';
-import { AudioToggle } from '../components/AudioToggle';
 import { hapticsService } from '../services/hapticsService';
 import { BookOpen, Mail, RotateCcw } from 'lucide-react';
 
@@ -282,11 +281,6 @@ export const Chapter10Finale: React.FC<Chapter10Props> = ({
             <RotateCcw size={14} />
             <span>{BIRTHDAY.story.ch10.buttonStartAgain}</span>
           </button>
-        </div>
-
-        {/* Global Audio Controller in Finale */}
-        <div style={{ marginTop: '0.5rem' }}>
-          <AudioToggle />
         </div>
       </div>
 

@@ -219,25 +219,9 @@ class AudioService {
     osc.stop(now + duration + 0.1);
   }
 
-  // Tactile SFX: Fairy light tap
+  // Tactile SFX: Light tap (silenced to preserve uninterrupted soundtrack)
   public playLightTap() {
-    if (!this.ctx || !this.sfxGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1480, now);
-    osc.frequency.exponentialRampToValueAtTime(880, now + 0.35);
-
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
-
-    osc.connect(gain);
-    gain.connect(this.sfxGain);
-
-    osc.start(now);
-    osc.stop(now + 0.4);
+    // Intentionally silent: removes high-pitched chirps/clicks during image and card interactions
   }
 
   // Tactile SFX: Letter opening paper unfold
