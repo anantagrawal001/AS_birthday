@@ -12,6 +12,9 @@ class AudioService {
   private sfxGain: GainNode | null = null;
   private listeners: Set<(muted: boolean) => void> = new Set();
 
+  private bgmAudio: HTMLAudioElement | null = null;
+  private currentTrackName: string = 'Kal Ho Naa Ho (Romantic Instrumental)';
+
   constructor() {
     if (typeof window !== 'undefined') {
       document.addEventListener('visibilitychange', () => {
@@ -25,6 +28,13 @@ class AudioService {
   }
 
   private initContext() {
+    if (typeof window !== 'undefined' && !this.bgmAudio) {
+      this.bgmAudio = new Audio('assets/audio/romantic-bgm.mp3');
+      this.bgmAudio.loop = true;
+      this.bgmAudio.preload = 'auto';
+      this.bgmAudio.volume = this.isMuted ? 0 : 0.65;
+    }
+
     if (!this.ctx && typeof window !== 'undefined') {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (AudioCtx) {
@@ -60,6 +70,21 @@ class AudioService {
     return this.isMuted;
   }
 
+  public getCurrentTrack(): string {
+    return this.currentTrackName;
+  }
+
+  public loadCustomTrack(file: File) {
+    this.initContext();
+    if (!this.bgmAudio) return;
+    const url = URL.createObjectURL(file);
+    this.bgmAudio.src = url;
+    this.currentTrackName = file.name.replace(/\.[^/.]+$/, '');
+    if (!this.isMuted) {
+      this.bgmAudio.play().catch(() => {});
+    }
+  }
+
   public toggleMute(): boolean {
     this.initContext();
     this.isMuted = !this.isMuted;
@@ -68,9 +93,21 @@ class AudioService {
       this.masterGain.gain.cancelScheduledValues(now);
       this.masterGain.gain.linearRampToValueAtTime(this.isMuted ? 0 : 0.8, now + 0.1);
     }
-    if (!this.isMuted && !this.isPlayingAmbience) {
+
+    if (this.bgmAudio) {
+      if (!this.isMuted) {
+        this.bgmAudio.volume = 0.65;
+        this.bgmAudio.play().catch(() => {
+          // Fallback to synthesized romantic ambience if browser blocks audio element
+          if (!this.isPlayingAmbience) this.startAmbience();
+        });
+      } else {
+        this.bgmAudio.pause();
+      }
+    } else if (!this.isMuted && !this.isPlayingAmbience) {
       this.startAmbience();
     }
+
     this.notify();
     return this.isMuted;
   }
@@ -85,6 +122,9 @@ class AudioService {
   }
 
   public duckMusic(duck: boolean) {
+    if (this.bgmAudio) {
+      this.bgmAudio.volume = duck ? 0.15 : (this.isMuted ? 0 : 0.65);
+    }
     if (!this.musicGain || !this.ctx) return;
     const now = this.ctx.currentTime;
     const target = duck ? 0.15 : 0.5;
@@ -93,18 +133,24 @@ class AudioService {
   }
 
   private pauseAll() {
+    if (this.bgmAudio && !this.bgmAudio.paused) {
+      this.bgmAudio.pause();
+    }
     if (this.ctx && this.ctx.state === 'running') {
       this.ctx.suspend().catch(() => {});
     }
   }
 
   private resumeAll() {
+    if (this.bgmAudio && !this.isMuted) {
+      this.bgmAudio.play().catch(() => {});
+    }
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume().catch(() => {});
     }
   }
 
-  // Synthesize an intimate warm acoustic piano chord sequence
+  // Synthesize an intimate warm acoustic piano chord sequence (Fallback)
   public startAmbience() {
     this.initContext();
     if (this.isPlayingAmbience) return;
