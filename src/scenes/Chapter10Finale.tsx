@@ -59,6 +59,7 @@ export const Chapter10Finale: React.FC<Chapter10Props> = ({
       >
         {/* Main Formal Portrait (PHOTO_35) */}
         <div
+          className="photo-card-hover shimmer-gleam"
           style={{
             position: 'relative',
             width: 'clamp(220px, 45vw, 300px)',
@@ -168,6 +169,7 @@ export const Chapter10Finale: React.FC<Chapter10Props> = ({
           }}
         >
           <div
+            className="photobooth-cell-hover"
             style={{
               width: '80px',
               height: '80px',
@@ -207,6 +209,7 @@ export const Chapter10Finale: React.FC<Chapter10Props> = ({
         >
           <button
             type="button"
+            className="btn-romantic-hover"
             onClick={() => {
               hapticsService.light();
               onRereadLetter();
@@ -231,6 +234,7 @@ export const Chapter10Finale: React.FC<Chapter10Props> = ({
 
           <button
             type="button"
+            className="btn-romantic-hover shimmer-gleam"
             onClick={() => {
               hapticsService.medium();
               onOpenMagazine();
@@ -256,6 +260,7 @@ export const Chapter10Finale: React.FC<Chapter10Props> = ({
 
           <button
             type="button"
+            className="btn-romantic-hover"
             onClick={() => {
               hapticsService.light();
               onRestart();

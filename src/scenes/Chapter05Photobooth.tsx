@@ -33,6 +33,7 @@ export const Chapter05Photobooth: React.FC = () => {
   const renderStrip = (cellTags: string[], angle: number, label: string) => {
     return (
       <div
+        className="photo-card-hover"
         style={{
           backgroundColor: '#FFFFFF',
           padding: '16px 14px 28px 14px',
@@ -52,6 +53,7 @@ export const Chapter05Photobooth: React.FC = () => {
           <button
             key={tag}
             type="button"
+            className="photobooth-cell-hover shimmer-gleam"
             onClick={() => handleCellClick(tag)}
             aria-label={`Open photobooth cell ${idx + 1}`}
             style={{

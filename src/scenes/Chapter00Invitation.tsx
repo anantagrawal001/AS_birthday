@@ -117,6 +117,7 @@ export const Chapter00Invitation: React.FC<Chapter00Props> = ({ onEnter }) => {
           <button
             type="button"
             onClick={handleOpen}
+            className="btn-romantic-hover shimmer-gleam"
             style={{
               padding: '1rem 1.8rem',
               backgroundColor: 'var(--burgundy)',
@@ -126,7 +127,6 @@ export const Chapter00Invitation: React.FC<Chapter00Props> = ({ onEnter }) => {
               fontSize: 'var(--text-base)',
               letterSpacing: '0.04em',
               boxShadow: '0 8px 24px rgba(139, 71, 87, 0.35)',
-              transition: 'all 0.25s ease',
               border: '1px solid rgba(212, 175, 142, 0.3)',
               cursor: 'pointer'
             }}

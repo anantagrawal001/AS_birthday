@@ -117,7 +117,7 @@ export const Chapter08LoveLetter: React.FC = () => {
 
             {/* Vintage Airmail Envelope Physical Card */}
             <div
-              className={`airmail-border hover-card-tilt ${isAnimating ? 'flap-opening' : ''}`}
+              className={`airmail-border hover-card-tilt shimmer-gleam ${isAnimating ? 'flap-opening' : ''}`}
               style={{
                 width: 'clamp(300px, 86vw, 560px)',
                 cursor: 'pointer',
@@ -263,7 +263,7 @@ export const Chapter08LoveLetter: React.FC = () => {
                 >
                   {/* Crimson Wax Seal */}
                   <div
-                    className="wax-seal-pulse"
+                    className="wax-seal-pulse wax-seal-hover"
                     style={{
                       width: '64px',
                       height: '64px',
@@ -327,6 +327,7 @@ export const Chapter08LoveLetter: React.FC = () => {
             <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 type="button"
+                className="btn-romantic-hover"
                 onClick={handleFoldBack}
                 style={{
                   display: 'inline-flex',

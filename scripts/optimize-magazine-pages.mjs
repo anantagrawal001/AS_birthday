@@ -25,6 +25,14 @@ const files = [
 
 async function run() {
   console.log('--- Optimizing Custom Designed Magazine Pages ---');
+  if (!fs.existsSync(SRC_MAGZINE_DIR)) {
+    if (fs.existsSync(path.join(OUTPUT_MAG_DIR, 'page_01.webp'))) {
+      console.log('Raw magzine/ folder already cleaned up and public/assets/magazine/ is fully populated. Skipping conversion.');
+      return;
+    }
+    throw new Error(`Directory not found: ${SRC_MAGZINE_DIR}`);
+  }
+
   const manifest = [];
 
   for (const item of files) {

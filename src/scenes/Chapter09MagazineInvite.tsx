@@ -127,7 +127,7 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
             display: 'flex',
             flexDirection: 'column'
           }}
-          className="hover-card-tilt"
+          className="hover-card-tilt photo-card-hover shimmer-gleam"
         >
           {/* Cover Photo Backdrop (User's Custom Designed Cover) */}
           <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
@@ -213,6 +213,7 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
         >
           <button
             type="button"
+            className="btn-romantic-hover shimmer-gleam"
             onClick={handleLaunch}
             style={{
               width: '100%',
@@ -239,6 +240,7 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
 
           <button
             type="button"
+            className="btn-romantic-hover"
             onClick={onSkip}
             style={{
               fontFamily: 'var(--font-sans)',

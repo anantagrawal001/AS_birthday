@@ -106,6 +106,7 @@ export const Chapter06OrdinaryDays: React.FC = () => {
                 >
                   <button
                     type="button"
+                    className="photo-card-hover shimmer-gleam"
                     onClick={() => handlePhotoClick(mem.primaryTag)}
                     aria-label={`View ${mem.title}`}
                     style={{
@@ -146,6 +147,7 @@ export const Chapter06OrdinaryDays: React.FC = () => {
                         <button
                           key={tag}
                           type="button"
+                          className="photobooth-cell-hover shimmer-gleam"
                           onClick={() => handlePhotoClick(tag)}
                           aria-label={`View alternate photo ${tag}`}
                           style={{

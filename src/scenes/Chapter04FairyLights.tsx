@@ -109,6 +109,7 @@ export const Chapter04FairyLights: React.FC = () => {
           type="button"
           onClick={() => handlePhotoClick(tag)}
           aria-label={`View photograph: ${photo.alt}`}
+          className="polaroid-hover shimmer-gleam"
           style={{
             padding: isMobile ? '6px 6px 16px 6px' : '8px 8px 22px 8px',
             backgroundColor: '#FFFFFF',
@@ -120,8 +121,7 @@ export const Chapter04FairyLights: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: isMobile ? 'clamp(120px, 42vw, 160px)' : 'clamp(140px, 22vw, 210px)',
-            transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+            width: isMobile ? 'clamp(120px, 42vw, 160px)' : 'clamp(140px, 22vw, 210px)'
           }}
         >
           <div

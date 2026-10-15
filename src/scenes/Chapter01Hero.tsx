@@ -179,6 +179,7 @@ export const Chapter01Hero: React.FC<Chapter01Props> = ({ onNext }) => {
           type="button"
           onClick={onNext}
           aria-label={BIRTHDAY.story.ch01.actionText}
+          className="btn-romantic-hover shimmer-gleam"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -193,8 +194,7 @@ export const Chapter01Hero: React.FC<Chapter01Props> = ({ onNext }) => {
             fontSize: 'var(--text-sm)',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            cursor: 'pointer',
-            transition: 'all 0.25s ease'
+            cursor: 'pointer'
           }}
         >
           <span>{BIRTHDAY.story.ch01.actionText}</span>

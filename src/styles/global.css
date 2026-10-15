@@ -393,4 +393,127 @@ img {
   }
 }
 
+/* ========================================================
+   CINEMATIC HOVER ANIMATIONS & MICRO-INTERACTIONS
+   ======================================================== */
+
+/* 1. Universal Interactive Button Hover States */
+button {
+  transition: transform 0.28s cubic-bezier(0.2, 1, 0.3, 1), 
+              box-shadow 0.28s ease, 
+              filter 0.25s ease, 
+              background-color 0.25s ease,
+              border-color 0.25s ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* 2. Romantic Pill Button Hover Glow */
+.btn-romantic-hover {
+  transition: transform 0.28s cubic-bezier(0.2, 1, 0.3, 1), 
+              box-shadow 0.28s ease, 
+              border-color 0.28s ease,
+              background-color 0.28s ease !important;
+}
+
+.btn-romantic-hover:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(139, 71, 87, 0.5), 0 0 20px rgba(212, 175, 142, 0.45) !important;
+  border-color: rgba(212, 175, 142, 0.6) !important;
+}
+
+.btn-romantic-hover:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* 3. Shimmer Light Gleam on Hover */
+.shimmer-gleam {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-gleam::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 235, 195, 0.2) 50%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  transition: left 0.75s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.shimmer-gleam:hover::before {
+  left: 200%;
+}
+
+/* 4. Photo Card Lift & Glow */
+.photo-card-hover {
+  transition: transform 0.35s cubic-bezier(0.2, 1, 0.3, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+  will-change: transform, box-shadow;
+}
+
+.photo-card-hover:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 142, 0.35) !important;
+  border-color: rgba(212, 175, 142, 0.5) !important;
+}
+
+.photo-card-hover img {
+  transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.photo-card-hover:hover img {
+  transform: scale(1.05);
+}
+
+/* 5. Photobooth Cell Hover Flash */
+.photobooth-cell-hover {
+  transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photobooth-cell-hover:hover {
+  transform: translateY(-4px) scale(1.05);
+  filter: brightness(1.1) contrast(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 142, 0.4);
+  z-index: 10;
+}
+
+/* 6. Hanging Polaroid Hover Lift & Rotation */
+.polaroid-hover {
+  transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.polaroid-hover:hover {
+  transform: translateY(-6px) scale(1.04) rotate(0deg) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 25px rgba(212, 175, 142, 0.45) !important;
+}
+
+/* 7. Retro Wax Seal Hover Pulse */
+.wax-seal-hover {
+  transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.wax-seal-hover:hover {
+  transform: scale(1.12) rotate(5deg);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 142, 0.8) !important;
+}
+
+
 

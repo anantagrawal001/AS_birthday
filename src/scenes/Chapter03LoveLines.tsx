@@ -127,12 +127,12 @@ export const Chapter03LoveLines: React.FC = () => {
             return (
               <div
                 key={card.id}
+                className="photo-card-hover shimmer-gleam"
                 style={{
                   backgroundColor: 'rgba(32, 28, 33, 0.75)',
                   border: '1px solid rgba(212, 175, 142, 0.2)',
                   borderRadius: 'var(--radius-md)',
                   overflow: 'hidden',
-                  transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
                   boxShadow: isRevealed ? 'var(--shadow-warm-sm)' : 'none'
                 }}
               >

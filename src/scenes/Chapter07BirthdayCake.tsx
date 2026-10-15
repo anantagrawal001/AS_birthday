@@ -432,6 +432,7 @@ export const Chapter07BirthdayCake: React.FC<Chapter07Props> = ({ onContinue }) 
               {/* Primary Universal Blow Button */}
               <button
                 type="button"
+                className="btn-romantic-hover shimmer-gleam"
                 onClick={handleBlowTap}
                 aria-label={BIRTHDAY.story.ch07.blowTapText}
                 style={{
@@ -528,6 +529,7 @@ export const Chapter07BirthdayCake: React.FC<Chapter07Props> = ({ onContinue }) 
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <button
                 type="button"
+                className="btn-romantic-hover shimmer-gleam"
                 onClick={onContinue}
                 style={{
                   padding: '0.85rem 1.8rem',
@@ -552,6 +554,7 @@ export const Chapter07BirthdayCake: React.FC<Chapter07Props> = ({ onContinue }) 
 
               <button
                 type="button"
+                className="btn-romantic-hover"
                 onClick={handleRelight}
                 style={{
                   padding: '0.85rem 1.4rem',

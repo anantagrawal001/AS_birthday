@@ -4,7 +4,9 @@ import crypto from 'crypto';
 import sharp from 'sharp';
 
 const ROOT_DIR = process.cwd();
-const TAGS_CSV_PATH = path.join(ROOT_DIR, 'tags.csv');
+const TAGS_CSV_PATH = fs.existsSync(path.join(ROOT_DIR, 'tags.csv'))
+  ? path.join(ROOT_DIR, 'tags.csv')
+  : path.join(ROOT_DIR, 'couple-photos-tagged', 'tags.csv');
 const OUTPUT_PHOTO_DIR = path.join(ROOT_DIR, 'public', 'assets', 'photos');
 const AUDIT_JSON_PATH = path.join(ROOT_DIR, 'src', 'generated', 'photoAudit.json');
 const MANIFEST_TS_PATH = path.join(ROOT_DIR, 'src', 'content', 'photoManifest.ts');
@@ -551,10 +553,13 @@ async function run() {
   for (let i = 1; i <= 35; i++) {
     const numStr = String(i).padStart(2, '0');
     const filename = `couple${numStr}.jpg`;
-    const srcPath = path.join(ROOT_DIR, filename);
+    let srcPath = path.join(ROOT_DIR, filename);
+    if (!fs.existsSync(srcPath)) {
+      srcPath = path.join(ROOT_DIR, 'couple-photos-tagged', filename);
+    }
 
     if (!fs.existsSync(srcPath)) {
-      throw new Error(`Missing mandatory photo file: ${srcPath}`);
+      throw new Error(`Missing mandatory photo file: couple${numStr}.jpg in root or couple-photos-tagged/`);
     }
 
     const fileBuffer = fs.readFileSync(srcPath);
