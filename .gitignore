@@ -40,9 +40,5 @@ ehthumbs.db
 
 # Archive directories and raw working folders (optimized public derivatives reside in public/assets/photos/)
 couple-photos-tagged/
-Aanya_Birthday_Website/
-Birthday_Magazine_AANYA_SHARMA/
-Instagram_Birthday_AANYA/
-final-complete/
-mnt/
-photo*.jpg
+/photo*.jpg
+!public/assets/photos/*
