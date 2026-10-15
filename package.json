@@ -1,0 +1,38 @@
+{
+  "name": "aanya-birthday-2026",
+  "version": "1.0.0",
+  "description": "Aanya Sharma's 23rd Birthday Celebration & Luxury Keepsake Magazine",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "audit:photos": "node scripts/audit-and-optimize-photos.mjs"
+  },
+  "keywords": [
+    "birthday",
+    "aanya",
+    "romantic-keepsake",
+    "luxury-magazine"
+  ],
+  "author": "Anant Agrawal",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "lucide-react": "^1.57.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "sharp": "^0.35.5",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}

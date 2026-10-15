@@ -1,0 +1,23 @@
+🎂 AANYA'S 23RD BIRTHDAY GIFT — COMPLETE PROJECT 🎂
+
+This package contains everything to build:
+1. A beautiful 12-page birthday magazine (print-ready)
+2. A romantic interactive website (share-via-link)
+
+HOW TO USE:
+
+1. Read FINAL_BUILD_PROMPT.md completely.
+2. Give this entire folder (FINAL_BUILD_PROMPT.md + couple-photos/ subfolder) to your design/coding agent (Gemini, Claude Code, etc.).
+3. The agent will generate:
+   - Magazine: 12 high-res pages you can print or send to a print service
+   - Website: An index.html + supporting files that you host on GitHub Pages
+
+All text is complete. All couple photos are numbered couple01.jpg through couple35.jpg and tagged with suggested use. Pick the best ones for each page/section using the tags.csv file.
+
+Birthday: 17 October
+Gift for: Aanya Sharma (age 23)
+From: Anant Agrawal
+
+The magazine keeps the tone private-friendly (in case anyone sees it). The website is openly romantic—meant only for her eyes.
+
+Good luck! 🎉
