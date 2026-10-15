@@ -1,8 +1,8 @@
 import React from 'react';
 import { BIRTHDAY } from '../content/config';
-import { PhotoPicture } from '../components/PhotoPicture';
+import { DESIGNED_MAGAZINE_PAGES } from '../content/magazineDesignedPages';
 import { hapticsService } from '../services/hapticsService';
-import { BookOpen, ArrowRight } from 'lucide-react';
+import { BookOpen, ArrowRight, Sparkles } from 'lucide-react';
 
 interface Chapter09Props {
   onOpenMagazine: () => void;
@@ -17,6 +17,8 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
     hapticsService.medium();
     onOpenMagazine();
   };
+
+  const cover = DESIGNED_MAGAZINE_PAGES[0];
 
   return (
     <section
@@ -68,11 +70,14 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
               color: 'var(--blush)',
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              display: 'block',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
               marginBottom: '0.5rem'
             }}
           >
-            A Secret Keepsake
+            <Sparkles size={14} color="var(--gold)" />
+            <span>A Secret Keepsake</span>
           </span>
           <h2
             style={{
@@ -110,31 +115,36 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
             position: 'relative',
             width: 'clamp(240px, 45vw, 320px)',
             aspectRatio: '1 / 1.414', // Classic A4 ratio
-            backgroundColor: '#262024',
-            borderRadius: '4px',
+            backgroundColor: '#1E1920',
+            borderRadius: '6px',
             overflow: 'hidden',
             boxShadow:
-              '0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(212, 175, 142, 0.25), inset 4px 0 10px rgba(0, 0, 0, 0.6)',
-            border: '1px solid rgba(212, 175, 142, 0.3)',
+              '0 25px 60px rgba(0, 0, 0, 0.75), 0 0 45px rgba(212, 175, 142, 0.3), inset 3px 0 8px rgba(0, 0, 0, 0.5)',
+            border: '1px solid rgba(212, 175, 142, 0.35)',
             cursor: 'pointer',
             padding: 0,
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+            transition: 'transform 0.35s var(--ease-cinematic), box-shadow 0.35s ease',
             display: 'flex',
             flexDirection: 'column'
           }}
+          className="hover-card-tilt"
         >
-          {/* Cover Photo Backdrop (PHOTO_01) */}
+          {/* Cover Photo Backdrop (User's Custom Designed Cover) */}
           <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
-            <PhotoPicture
-              photoTag={BIRTHDAY.story.ch09.coverThumbnailTag}
-              useThumb={true}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                filter: 'brightness(0.65)'
-              }}
-            />
+            <picture style={{ width: '100%', height: '100%', display: 'block' }}>
+              <source srcSet={cover.webp} type="image/webp" />
+              <img
+                src={cover.jpg}
+                alt={cover.title}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+                loading="eager"
+              />
+            </picture>
           </div>
 
           {/* Book Spine Texture on Left Edge */}
@@ -144,7 +154,7 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
               top: 0,
               left: 0,
               bottom: 0,
-              width: '14px',
+              width: '16px',
               background:
                 'linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3) 60%, transparent)',
               zIndex: 3,
@@ -152,81 +162,43 @@ export const Chapter09MagazineInvite: React.FC<Chapter09Props> = ({
             }}
           />
 
-          {/* Cover Editorial Typography */}
+          {/* Paper Sheen Reflection */}
           <div
             style={{
-              position: 'relative',
-              zIndex: 2,
-              padding: '1.5rem',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              textAlign: 'center',
-              backgroundColor: 'rgba(21, 19, 22, 0.45)'
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 40%, rgba(0, 0, 0, 0.1) 100%)',
+              zIndex: 3,
+              pointerEvents: 'none'
+            }}
+          />
+
+          {/* Floating Tap to Read Pill Badge */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '1rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 4,
+              backgroundColor: 'rgba(21, 19, 22, 0.85)',
+              backdropFilter: 'blur(8px)',
+              padding: '0.45rem 1rem',
+              borderRadius: 'var(--radius-pill)',
+              border: '1px solid rgba(212, 175, 142, 0.45)',
+              color: 'var(--gold)',
+              fontFamily: 'var(--font-serif)',
+              fontSize: '0.75rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
             }}
           >
-            <div>
-              <p
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '1.4rem',
-                  letterSpacing: '0.2em',
-                  color: 'var(--light)',
-                  margin: 0
-                }}
-              >
-                {BIRTHDAY.recipient.displayName.toUpperCase()}
-              </p>
-              <div
-                style={{
-                  width: '24px',
-                  height: '1px',
-                  backgroundColor: 'var(--gold)',
-                  margin: '0.4rem auto'
-                }}
-              />
-            </div>
-
-            <div>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '1.1rem',
-                  letterSpacing: '0.1em',
-                  color: 'var(--gold)',
-                  textTransform: 'uppercase',
-                  lineHeight: 1.3,
-                  margin: '0 0 0.5rem 0'
-                }}
-              >
-                {BIRTHDAY.magazine.title}
-              </h3>
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '0.7rem',
-                  letterSpacing: '0.08em',
-                  color: 'var(--blush)',
-                  textTransform: 'uppercase',
-                  margin: 0
-                }}
-              >
-                {BIRTHDAY.magazine.subtitle}
-              </p>
-            </div>
-
-            <div
-              style={{
-                fontFamily: 'var(--font-hand)',
-                fontSize: '1.25rem',
-                color: 'var(--light)'
-              }}
-            >
-              {BIRTHDAY.magazine.credit}
-            </div>
+            Tap to open magazine
           </div>
         </button>
+
 
         {/* Action Buttons */}
         <div

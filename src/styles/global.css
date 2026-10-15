@@ -105,3 +105,197 @@ img {
   white-space: nowrap;
   border: 0;
 }
+
+/* ========================================================
+   RETRO VINTAGE ENVELOPE & 3D LETTER ANIMATIONS (Chapter 08)
+   ======================================================== */
+
+/* Airmail vintage border */
+.airmail-border {
+  background: repeating-linear-gradient(
+    135deg,
+    #9E384C 0px,
+    #9E384C 14px,
+    #FAF6F0 14px,
+    #FAF6F0 24px,
+    #2B435C 24px,
+    #2B435C 38px,
+    #FAF6F0 38px,
+    #FAF6F0 48px
+  );
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Wax Seal Breathing Pulse */
+@keyframes waxSealPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45), 0 0 15px rgba(212, 175, 142, 0.35);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.5), 0 0 25px rgba(212, 175, 142, 0.65);
+  }
+}
+
+.wax-seal-pulse {
+  animation: waxSealPulse 2.8s ease-in-out infinite;
+}
+
+/* Flap Open & Close in 3D */
+@keyframes flapOpen3D {
+  0% {
+    transform: rotateX(0deg);
+    z-index: 10;
+  }
+  49% {
+    z-index: 10;
+  }
+  50% {
+    transform: rotateX(90deg);
+    z-index: 1;
+  }
+  100% {
+    transform: rotateX(180deg);
+    z-index: 1;
+  }
+}
+
+.flap-opening {
+  animation: flapOpen3D 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transform-origin: top center;
+}
+
+/* Parchment Unfolding 3D */
+@keyframes parchmentUnfold3D {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.88) rotateX(25deg);
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(-15px) scale(0.97) rotateX(8deg);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+.parchment-unfold {
+  animation: parchmentUnfold3D 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-origin: top center;
+}
+
+/* Postmark Circular Stamp */
+.postmark-stamp {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px dashed rgba(139, 71, 87, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justifyContent: center;
+  color: rgba(139, 71, 87, 0.75);
+  transform: rotate(-12deg);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ========================================================
+   CINEMATIC VISUAL EFFECTS & TRANSITIONS
+   ======================================================== */
+
+/* Blur to Focus entrance */
+@keyframes blurToFocus {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(22px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0) scale(1);
+  }
+}
+
+.blur-in {
+  animation: blurToFocus 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Drawn SVG Flourish divider line */
+@keyframes drawFlourishLine {
+  0% {
+    stroke-dashoffset: 800;
+    opacity: 0.2;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.8;
+  }
+}
+
+.drawn-flourish-line {
+  stroke-dasharray: 800;
+  animation: drawFlourishLine 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* 3D Card Hover Tilt */
+.hover-card-tilt {
+  transition: transform 0.35s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.hover-card-tilt:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 142, 0.25);
+}
+
+/* Curtain Reveal Animation */
+@keyframes curtainReveal {
+  0% {
+    clip-path: inset(0 50% 0 50%);
+    opacity: 0;
+  }
+  100% {
+    clip-path: inset(0 0% 0 0%);
+    opacity: 1;
+  }
+}
+
+.curtain-reveal {
+  animation: curtainReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Ambient Floating Golden Motes */
+@keyframes floatUpMote {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.65;
+  }
+  80% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translateY(-140px) translateX(25px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.floating-mote {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 235, 195, 0.9) 0%, rgba(212, 175, 142, 0.4) 60%, transparent 100%);
+  pointer-events: none;
+  animation: floatUpMote 5.5s infinite ease-in-out;
+}
+

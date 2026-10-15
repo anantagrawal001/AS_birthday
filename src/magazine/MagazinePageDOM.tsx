@@ -2,6 +2,7 @@ import React from 'react';
 import { MagazinePageFace } from '../content/magazinePages';
 import { PhotoPicture } from '../components/PhotoPicture';
 import { BIRTHDAY } from '../content/config';
+import { DESIGNED_MAGAZINE_PAGES } from '../content/magazineDesignedPages';
 
 interface MagazinePageDOMProps {
   page: MagazinePageFace;
@@ -11,7 +12,124 @@ interface MagazinePageDOMProps {
 export const MagazinePageDOM: React.FC<MagazinePageDOMProps> = ({ page, isSpread = false }) => {
   const isVerso = page.side === 'verso';
 
-  // Base page style
+  // 0. CUSTOM DESIGNED EDITORIAL PAGES (From user's print-ready pages)
+  const designedPage = DESIGNED_MAGAZINE_PAGES.find((p) => p.page === page.pageNumber);
+  if (designedPage) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          backgroundColor: page.isCover || page.isBackCover ? '#171317' : '#FAF6F0',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          userSelect: 'none'
+        }}
+      >
+        <picture style={{ width: '100%', height: '100%', display: 'block' }}>
+          <source srcSet={designedPage.webp} type="image/webp" />
+          <img
+            src={designedPage.jpg}
+            alt={designedPage.title}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block'
+            }}
+            loading={page.pageNumber <= 2 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </picture>
+
+        {/* Subtle paper grain texture */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(rgba(0,0,0,0.035) 1px, transparent 0)',
+            backgroundSize: '12px 12px',
+            pointerEvents: 'none',
+            opacity: 0.7
+          }}
+        />
+
+        {/* Realistic Book Spine Shadow for 2-page spread */}
+        {isSpread && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              pointerEvents: 'none',
+              zIndex: 4,
+              ...(isVerso
+                ? {
+                    right: 0,
+                    width: '32px',
+                    background:
+                      'linear-gradient(to left, rgba(0, 0, 0, 0.35) 0%, rgba(0,0,0,0.12) 50%, transparent 100%)'
+                  }
+                : {
+                    left: 0,
+                    width: '32px',
+                    background:
+                      'linear-gradient(to right, rgba(0, 0, 0, 0.35) 0%, rgba(0,0,0,0.12) 50%, transparent 100%)'
+                  })
+            }}
+          />
+        )}
+
+        {/* Outer edge subtle shading */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            pointerEvents: 'none',
+            zIndex: 4,
+            ...(isVerso
+              ? {
+                  left: 0,
+                  width: '14px',
+                  background:
+                    'linear-gradient(to right, rgba(0, 0, 0, 0.16) 0%, transparent 100%)'
+                }
+              : {
+                  right: 0,
+                  width: '14px',
+                  background:
+                    'linear-gradient(to left, rgba(0, 0, 0, 0.16) 0%, transparent 100%)'
+                })
+          }}
+        />
+
+        {/* Soft Light Sheen / Gloss reflection */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 45%, rgba(0, 0, 0, 0.05) 100%)',
+            pointerEvents: 'none',
+            zIndex: 3
+          }}
+        />
+
+        {/* Hidden screen-reader transcript */}
+        <div className="sr-only">
+          <h2>{page.title}</h2>
+          {page.pullQuote && <p>{page.pullQuote}</p>}
+          {page.bodyText && <p>{page.bodyText}</p>}
+        </div>
+      </div>
+    );
+  }
+
+  // Base page style (Fallback)
   const pageContainerStyle: React.CSSProperties = {
     position: 'relative',
     width: '100%',

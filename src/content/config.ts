@@ -43,6 +43,7 @@ export interface BirthdayConfig {
       subtitle: string;
       cards: Array<{
         id: number;
+        teaser: string;
         text: string;
         photoTag: string | null;
       }>;
@@ -177,36 +178,42 @@ export const BIRTHDAY: BirthdayConfig = {
     },
     ch03: {
       title: 'A few things I do not say enough',
-      subtitle: 'Tap each card to reveal',
+      subtitle: 'Tap each card to reveal what is in my heart',
       cards: [
         {
           id: 1,
-          text: 'Your smile can change the mood of my whole day.',
+          teaser: 'The quiet magic in your smile',
+          text: 'Whenever you look at me and smile, all the noise in the world just falls away. You bring an effortless warmth into my life that nothing else ever could, and loving you is the easiest, most natural thing I have ever done.',
           photoTag: 'PHOTO_13'
         },
         {
           id: 2,
-          text: 'I love the little moments that become ours without us even noticing.',
-          photoTag: null
-        },
-        {
-          id: 3,
-          text: 'I love being close to you, even when we are doing absolutely nothing special.',
+          teaser: 'Our unwritten, quiet rhythm',
+          text: 'My absolute favorite moments are the ones we never had to plan, sitting together in comfortable silence, reaching for your hand, and realizing that home is not a place at all; it is being right beside you.',
           photoTag: 'PHOTO_26'
         },
         {
+          id: 3,
+          teaser: 'The shelter of your presence',
+          text: 'In a world that is always rushing, you are my peace, my anchor, and my gentle calm. Just knowing you are in my life makes every ordinary day feel precious, rare, and whole.',
+          photoTag: 'PHOTO_17'
+        },
+        {
           id: 4,
-          text: 'When I think about the days ahead, I want you beside me.',
-          photoTag: null
+          teaser: 'Every tomorrow I picture',
+          text: 'When I look ahead into the years to come, every single dream I have has your hand in mine. I want to stand beside you through every season, celebrating your victories, cheering your dreams, and holding you through everything.',
+          photoTag: 'PHOTO_27'
         },
         {
           id: 5,
-          text: 'I am proud of the person you are and the person you are becoming.',
-          photoTag: null
+          teaser: 'The grace and warmth in who you are',
+          text: 'I fall more in love with your mind, your kindness, and your soft, radiant heart every single day. Watching you grow into this incredible woman at 23 is a blessing I will cherish my whole life.',
+          photoTag: 'PHOTO_31'
         },
         {
           id: 6,
-          text: 'And no matter how often I say it, I will always mean this: I love you.',
+          teaser: 'My eternal, unequivocal truth',
+          text: 'No matter how many times I say it, words will never be large enough to hold what I feel for you. I love you, Aanya. Deeply, wholly, without hesitation, today and for all the days to come.',
           photoTag: 'PHOTO_35'
         }
       ]

@@ -108,6 +108,14 @@ test.describe('Aanya Birthday Romantic Journey & Magazine E2E', () => {
     // 9. Chapter 08 Full Love Letter
     const letterSection = page.locator('#chapter-08');
     await letterSection.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `docs/screenshots/${prefix}-08-letter-envelope-folded.png` });
+
+    // Click folded retro envelope to break seal & unfold letter
+    const envelopeBtn = page.getByRole('button', { name: 'Open your birthday love letter' });
+    await expect(envelopeBtn).toBeVisible();
+    await envelopeBtn.click();
+    await page.waitForTimeout(900); // wait for 3D flap & parchment unfolding animation
+
     await expect(page.getByText('My Aanya,')).toBeVisible();
     await expect(page.getByText('I love you. I love having you in my life')).toBeVisible();
     await expect(letterSection.getByText('Anant', { exact: true })).toBeVisible();

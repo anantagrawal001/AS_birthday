@@ -11,15 +11,71 @@ import { Chapter08LoveLetter } from '../scenes/Chapter08LoveLetter';
 import { Chapter09MagazineInvite } from '../scenes/Chapter09MagazineInvite';
 import { Chapter10Finale } from '../scenes/Chapter10Finale';
 import { AudioToggle } from '../components/AudioToggle';
+import { AtmosphericParticles } from '../effects/AtmosphericParticles';
+import { FlourishDivider } from '../components/FlourishDivider';
 
 // Dynamic code-split lazy import of Magazine - zero bundle cost on initial page load!
 const MagazineEntry = lazy(() => import('../magazine/MagazineEntry'));
 
+// Chapter Atmospheric Color Progression Map
+const CHAPTER_ATMOSPHERE_COLORS: Record<string, string> = {
+  'chapter-01': '#130C14',
+  'chapter-02': '#170E17',
+  'chapter-03': '#120914',
+  'chapter-04': '#0D0A11',
+  'chapter-05': '#161015',
+  'chapter-06': '#120C12',
+  'chapter-07': '#09070C',
+  'chapter-08': '#181217',
+  'chapter-09': '#140E15',
+  'chapter-10': '#0C0810'
+};
+
 export const App: React.FC = () => {
   const [hasEntered, setHasEntered] = useState<boolean>(false);
   const [isMagazineOpen, setIsMagazineOpen] = useState<boolean>(false);
+  const [activeBgColor, setActiveBgColor] = useState<string>('#130C14');
   const savedScrollOffset = useRef<number>(0);
   const triggerButtonRef = useRef<HTMLElement | null>(null);
+
+  // Smooth Section Background Color Shift on Scroll
+  useEffect(() => {
+    if (!hasEntered) return;
+
+    const chapterIds = [
+      'chapter-01',
+      'chapter-02',
+      'chapter-03',
+      'chapter-04',
+      'chapter-05',
+      'chapter-06',
+      'chapter-07',
+      'chapter-08',
+      'chapter-09',
+      'chapter-10'
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+            const color = CHAPTER_ATMOSPHERE_COLORS[entry.target.id];
+            if (color) {
+              setActiveBgColor(color);
+            }
+          }
+        });
+      },
+      { threshold: [0.25, 0.5] }
+    );
+
+    chapterIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [hasEntered]);
 
   // Check URL hash for direct deep-link to magazine (#magazine)
   useEffect(() => {
@@ -69,9 +125,20 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="app-container" style={{ position: 'relative', minHeight: '100vh' }}>
+    <div
+      className="app-container"
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        backgroundColor: activeBgColor,
+        transition: 'background-color 1.2s cubic-bezier(0.2, 0.8, 0.4, 1)'
+      }}
+    >
       {/* Subtle Film Grain Texture */}
       <div className="film-grain" />
+
+      {/* Ambient Floating Golden Starlight Particles */}
+      <AtmosphericParticles />
 
       {/* Floating Audio Controller */}
       <div
@@ -101,32 +168,50 @@ export const App: React.FC = () => {
           {/* Chapter 01: Hero */}
           <Chapter01Hero onNext={() => scrollToChapter('chapter-02')} />
 
+          <FlourishDivider />
+
           {/* Chapter 02: A Letter Begins */}
           <Chapter02LetterIntro onNext={() => scrollToChapter('chapter-03')} />
+
+          <FlourishDivider />
 
           {/* Chapter 03: Love Lines */}
           <Chapter03LoveLines />
 
+          <FlourishDivider />
+
           {/* Chapter 04: Signature Fairy Lights Memory Wall */}
           <Chapter04FairyLights />
+
+          <FlourishDivider />
 
           {/* Chapter 05: Our Little Photobooth Strip */}
           <Chapter05Photobooth />
 
+          <FlourishDivider />
+
           {/* Chapter 06: Ordinary Days */}
           <Chapter06OrdinaryDays />
+
+          <FlourishDivider />
 
           {/* Chapter 07: Interactive Birthday Cake Ritual */}
           <Chapter07BirthdayCake onContinue={() => scrollToChapter('chapter-08')} />
 
+          <FlourishDivider />
+
           {/* Chapter 08: Full Love Letter */}
           <Chapter08LoveLetter />
+
+          <FlourishDivider />
 
           {/* Chapter 09: Magazine Invitation */}
           <Chapter09MagazineInvite
             onOpenMagazine={handleOpenMagazine}
             onSkip={() => scrollToChapter('chapter-10')}
           />
+
+          <FlourishDivider />
 
           {/* Chapter 10: Finale */}
           <Chapter10Finale

@@ -155,28 +155,46 @@ export const Chapter03LoveLines: React.FC = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, paddingRight: '0.5rem' }}>
                     <span
                       style={{
                         fontFamily: 'var(--font-serif)',
                         fontSize: 'var(--text-lg)',
                         color: 'var(--gold)',
                         width: '28px',
-                        display: 'inline-block'
+                        display: 'inline-block',
+                        fontWeight: 500
                       }}
                     >
                       {String(card.id).padStart(2, '0')}.
                     </span>
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-sans)',
-                        fontSize: 'var(--text-sm)',
-                        letterSpacing: '0.04em',
-                        color: isRevealed ? 'var(--gold)' : 'var(--ivory)'
-                      }}
-                    >
-                      {isRevealed ? 'Revealed' : 'Tap to reveal note'}
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-serif)',
+                          fontSize: 'clamp(1.05rem, 2vw, 1.25rem)',
+                          letterSpacing: '0.02em',
+                          color: isRevealed ? 'var(--gold)' : 'var(--light)',
+                          fontWeight: isRevealed ? 500 : 400,
+                          transition: 'color 0.2s ease'
+                        }}
+                      >
+                        {card.teaser}
+                      </span>
+                      {!isRevealed && (
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-sans)',
+                            fontSize: '0.75rem',
+                            letterSpacing: '0.05em',
+                            textTransform: 'uppercase',
+                            color: 'rgba(212, 175, 142, 0.6)'
+                          }}
+                        >
+                          Tap to open
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div
@@ -184,10 +202,12 @@ export const Chapter03LoveLines: React.FC = () => {
                       width: '32px',
                       height: '32px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(212, 175, 142, 0.1)',
+                      backgroundColor: isRevealed ? 'rgba(212, 175, 142, 0.2)' : 'rgba(212, 175, 142, 0.1)',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     {isRevealed ? (
@@ -203,21 +223,22 @@ export const Chapter03LoveLines: React.FC = () => {
                   <div
                     id={`love-line-content-${card.id}`}
                     style={{
-                      padding: '0 1.5rem 1.5rem 1.5rem',
+                      padding: '0 1.5rem 1.6rem 1.5rem',
                       display: 'grid',
                       gridTemplateColumns: card.photoTag ? '1fr auto' : '1fr',
                       gap: '1.5rem',
                       alignItems: 'center',
-                      borderTop: '1px solid rgba(212, 175, 142, 0.1)'
+                      borderTop: '1px solid rgba(212, 175, 142, 0.12)'
                     }}
                   >
-                    <div style={{ paddingTop: '1rem' }}>
+                    <div style={{ paddingTop: '1.1rem' }}>
                       <p
                         style={{
                           fontFamily: 'var(--font-serif)',
-                          fontSize: 'var(--text-xl)',
+                          fontSize: 'clamp(1.15rem, 2.3vw, 1.45rem)',
                           color: 'var(--light)',
-                          lineHeight: 1.5,
+                          lineHeight: 1.7,
+                          fontStyle: 'italic',
                           margin: 0
                         }}
                       >
@@ -229,11 +250,12 @@ export const Chapter03LoveLines: React.FC = () => {
                       <div
                         style={{
                           paddingTop: '1rem',
-                          width: '100px',
-                          height: '100px',
-                          borderRadius: 'var(--radius-sm)',
+                          width: 'clamp(90px, 18vw, 120px)',
+                          height: 'clamp(90px, 18vw, 120px)',
+                          borderRadius: 'var(--radius-md)',
                           overflow: 'hidden',
-                          border: '1px solid rgba(212, 175, 142, 0.3)',
+                          border: '1px solid rgba(212, 175, 142, 0.35)',
+                          boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
                           flexShrink: 0
                         }}
                       >
