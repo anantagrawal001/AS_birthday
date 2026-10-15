@@ -13,7 +13,7 @@ class AudioService {
   private listeners: Set<(muted: boolean) => void> = new Set();
 
   private bgmAudio: HTMLAudioElement | null = null;
-  private currentTrackName: string = 'Kal Ho Naa Ho (Romantic Instrumental)';
+  private currentTrackName: string = 'Tum Se Hi (Romantic Instrumental)';
 
   constructor() {
     if (typeof window !== 'undefined') {
