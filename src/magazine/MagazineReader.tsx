@@ -16,7 +16,9 @@ import {
   Minimize2,
   FileText,
   RotateCcw,
-  Sliders
+  Sliders,
+  ZoomIn,
+  ZoomOut
 } from 'lucide-react';
 
 interface MagazineReaderProps {
@@ -38,6 +40,7 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
 
   const [bookState, setBookState] = useState<BookState>('CLOSED');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [quality, setQuality] = useState<QualityTier>(qualityManager.getQuality());
   const [isMuted, setIsMuted] = useState<boolean>(audioService.getMuted());
   const [hapticsOn, setHapticsOn] = useState<boolean>(hapticsService.isEnabled());
@@ -84,6 +87,11 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
       audioService.duckMusic(false);
     };
   }, []);
+
+  // Reset zoom on page turn
+  useEffect(() => {
+    setZoomLevel(1);
+  }, [currentPage]);
 
   // Keyboard Navigation
   useEffect(() => {
@@ -208,6 +216,8 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
   // Resolve pages for current view
   const isClosed = bookState === 'CLOSED' || currentPage === 1;
   const isOpening = bookState === 'OPENING';
+  const isBackCover = currentPage === 12;
+  const isSpreadView = readingMode === 'spread' && !isClosed && !isBackCover;
   const spread = PageModel.getSpreadPages(currentPage);
   const leftPageFace = spread.left ? PageModel.getPage(spread.left) : null;
   const rightPageFace = spread.right ? PageModel.getPage(spread.right) : null;
@@ -282,13 +292,33 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
         >
           {isClosed
             ? 'Cover'
-            : readingMode === 'spread' && leftPageFace && rightPageFace
+            : isBackCover
+            ? 'Back Cover'
+            : isSpreadView && leftPageFace && rightPageFace
             ? `Pages ${leftPageFace.pageNumber}–${rightPageFace.pageNumber} of 12`
             : `Page ${currentPage} of 12`}
         </div>
 
         {/* Right Utility Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {/* Zoom In / Zoom Out Toggle */}
+          <button
+            type="button"
+            onClick={() => setZoomLevel((prev) => (prev === 1 ? 1.4 : 1))}
+            aria-label={zoomLevel === 1 ? 'Zoom in' : 'Zoom out'}
+            title={zoomLevel === 1 ? 'Zoom in (1.4x)' : 'Zoom out (Fit screen)'}
+            style={{
+              padding: '0.5rem',
+              borderRadius: '50%',
+              backgroundColor: zoomLevel > 1 ? 'rgba(212, 175, 142, 0.25)' : 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(212, 175, 142, 0.25)',
+              color: zoomLevel > 1 ? 'var(--gold)' : 'var(--ivory)',
+              cursor: 'pointer'
+            }}
+          >
+            {zoomLevel === 1 ? <ZoomIn size={16} /> : <ZoomOut size={16} />}
+          </button>
+
           {/* Read Page Text accessibility button */}
           <button
             type="button"
@@ -465,12 +495,13 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
           padding: '1rem 0'
         }}
       >
-        {/* Previous page click / tap target */}
+        {/* Previous page click / tap target (Desktop only - mobile uses bottom thumb bar) */}
         <button
           type="button"
           onClick={handlePrev}
           disabled={!stateMachineRef.current.canGoPrev()}
           aria-label="Previous page"
+          className="desktop-only"
           style={{
             position: 'absolute',
             left: 'clamp(0.5rem, 2vw, 1.5rem)',
@@ -503,18 +534,20 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
           onPointerCancel={handlePointerUp}
           style={{
             position: 'relative',
-            width:
-              readingMode === 'spread' && !isClosed
-                ? 'min(94vw, 1100px)'
-                : 'min(88vw, 520px)',
-            height: 'min(78vh, 740px)',
+            width: isSpreadView ? 'min(94vw, 1100px)' : 'min(90vw, 480px)',
+            maxWidth: isSpreadView ? '1100px' : '480px',
+            maxHeight: 'min(78vh, 740px)',
+            aspectRatio: isSpreadView ? '2110 / 1491' : '1055 / 1491',
+            height: 'auto',
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: 'center center',
+            transition: 'transform 0.25s ease, width 0.35s ease',
             display: 'flex',
             boxShadow:
               '0 30px 80px rgba(0, 0, 0, 0.8), 0 0 45px rgba(212, 175, 142, 0.15)',
             borderRadius: '4px',
             perspective: '1500px',
-            touchAction: 'none',
-            transition: 'width 0.4s ease'
+            touchAction: zoomLevel > 1 ? 'auto' : 'pan-y'
           }}
         >
           {/* Stacking Paper Edges Thickness on sides */}
@@ -576,8 +609,8 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
             </div>
           )}
 
-          {/* OPEN SPREAD MODE (Desktop/Tablet) */}
-          {!isClosed && readingMode === 'spread' && (
+          {/* OPEN SPREAD MODE (Desktop/Tablet for interior pages 2 through 11) */}
+          {isSpreadView && (
             <div
               style={{
                 width: '100%',
@@ -643,8 +676,24 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
             </div>
           )}
 
-          {/* OPEN SINGLE PAGE MODE (Mobile Portrait) */}
-          {!isClosed && readingMode === 'single' && (
+          {/* BACK COVER MODE (Single Centered Page, identical in luxury finish to front cover) */}
+          {isBackCover && (
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#171317',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                position: 'relative'
+              }}
+            >
+              {singlePageFace && <MagazinePageDOM page={singlePageFace} />}
+            </div>
+          )}
+
+          {/* OPEN SINGLE PAGE MODE (Mobile Portrait for interior pages 2 through 11) */}
+          {!isClosed && !isBackCover && readingMode === 'single' && (
             <div
               style={{
                 width: '100%',
@@ -666,12 +715,13 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
           )}
         </div>
 
-        {/* Next page click / tap target */}
+        {/* Next page click / tap target (Desktop only - mobile uses bottom thumb bar) */}
         <button
           type="button"
           onClick={handleNext}
           disabled={!stateMachineRef.current.canGoNext() && !isClosed}
           aria-label="Next page"
+          className="desktop-only"
           style={{
             position: 'absolute',
             right: 'clamp(0.5rem, 2vw, 1.5rem)',
@@ -695,6 +745,84 @@ export const MagazineReader: React.FC<MagazineReaderProps> = ({ onClose }) => {
           <ChevronRight size={24} />
         </button>
       </main>
+
+      {/* Bottom Navigation Bar */}
+      <footer
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+          padding: '0.4rem 1rem',
+          zIndex: 10002,
+          maxWidth: '500px',
+          width: '100%',
+          margin: '0 auto'
+        }}
+      >
+        <button
+          type="button"
+          onClick={handlePrev}
+          disabled={!stateMachineRef.current.canGoPrev()}
+          aria-label="Previous page"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            padding: '0.45rem 1rem',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(212, 175, 142, 0.25)',
+            borderRadius: 'var(--radius-pill)',
+            color: 'var(--ivory)',
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'var(--text-xs)',
+            cursor: stateMachineRef.current.canGoPrev() ? 'pointer' : 'default',
+            opacity: stateMachineRef.current.canGoPrev() ? 1 : 0.3
+          }}
+        >
+          <ChevronLeft size={16} />
+          <span>Prev</span>
+        </button>
+
+        <span
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--blush)',
+            letterSpacing: '0.06em'
+          }}
+        >
+          {isClosed
+            ? 'Cover'
+            : isBackCover
+            ? 'Back Cover'
+            : `Page ${currentPage} of 12`}
+        </span>
+
+        <button
+          type="button"
+          onClick={isBackCover ? handleRestart : handleNext}
+          disabled={!stateMachineRef.current.canGoNext() && !isClosed && !isBackCover}
+          aria-label={isBackCover ? 'Restart magazine' : 'Next page'}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            padding: '0.45rem 1rem',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(212, 175, 142, 0.25)',
+            borderRadius: 'var(--radius-pill)',
+            color: 'var(--ivory)',
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'var(--text-xs)',
+            cursor: stateMachineRef.current.canGoNext() || isClosed || isBackCover ? 'pointer' : 'default',
+            opacity: stateMachineRef.current.canGoNext() || isClosed || isBackCover ? 1 : 0.3
+          }}
+        >
+          <span>{isBackCover ? 'Restart' : 'Next'}</span>
+          {isBackCover ? <RotateCcw size={14} /> : <ChevronRight size={16} />}
+        </button>
+      </footer>
 
       {/* Accessible Text Panel Modal */}
       {showTextModal && (

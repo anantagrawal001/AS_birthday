@@ -299,3 +299,98 @@ img {
   animation: floatUpMote 5.5s infinite ease-in-out;
 }
 
+/* ========================================================
+   FAIRY LIGHTS & HANGING POLAROIDS (Chapter 04)
+   ======================================================== */
+
+/* Star-like bright/dim twinkling animation */
+@keyframes fairyLightTwinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+    filter: drop-shadow(0 0 3px rgba(255, 190, 80, 0.4));
+  }
+  35% {
+    opacity: 0.95;
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 10px rgba(255, 220, 120, 0.95)) drop-shadow(0 0 20px rgba(255, 180, 40, 0.6));
+  }
+  65% {
+    opacity: 0.5;
+    transform: scale(0.9);
+    filter: drop-shadow(0 0 5px rgba(255, 190, 80, 0.5));
+  }
+  85% {
+    opacity: 1;
+    transform: scale(1.25);
+    filter: drop-shadow(0 0 14px rgba(255, 235, 160, 1)) drop-shadow(0 0 26px rgba(255, 195, 60, 0.75));
+  }
+}
+
+.fairy-bulb-twinkle {
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: fairyLightTwinkle ease-in-out infinite alternate;
+}
+
+/* Gentle Polaroid String Sway */
+@keyframes subtleSway {
+  0% {
+    transform: rotate(var(--angle, 0deg)) translateY(0px);
+  }
+  100% {
+    transform: rotate(calc(var(--angle, 0deg) + 2.5deg)) translateY(3px);
+  }
+}
+
+/* ========================================================
+   RESPONSIVE UTILITIES & CHAPTER 06 EDITORIAL ORDER
+   ======================================================== */
+
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Chapter 06: Title ALWAYS above image on mobile */
+.chapter06-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.chapter06-caption {
+  order: 1; /* On mobile: caption & title ALWAYS above image */
+}
+
+.chapter06-photo {
+  order: 2; /* On mobile: photo ALWAYS follows caption */
+}
+
+@media (min-width: 768px) {
+  .chapter06-card {
+    grid-template-columns: 1fr 1fr;
+  }
+  .chapter06-card.reversed .chapter06-photo {
+    order: 2;
+  }
+  .chapter06-card.reversed .chapter06-caption {
+    order: 1;
+  }
+  .chapter06-card:not(.reversed) .chapter06-photo {
+    order: 1;
+  }
+  .chapter06-card:not(.reversed) .chapter06-caption {
+    order: 2;
+  }
+}
+
+

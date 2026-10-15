@@ -37,7 +37,7 @@ export const MagazinePageDOM: React.FC<MagazinePageDOMProps> = ({ page, isSpread
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
+              objectFit: 'contain',
               display: 'block'
             }}
             loading={page.pageNumber <= 2 ? 'eager' : 'lazy'}

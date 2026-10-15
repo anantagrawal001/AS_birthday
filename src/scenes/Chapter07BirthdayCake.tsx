@@ -25,6 +25,7 @@ export const Chapter07BirthdayCake: React.FC<Chapter07Props> = ({ onContinue }) 
     unsupported: false,
     confidence: 0
   });
+  const [micNotice, setMicNotice] = useState<string | null>(null);
   const timeoutRef = useRef<number | null>(null);
 
   // Transition from UNLIT_INTRO to LIT_READY shortly after entering
@@ -71,14 +72,28 @@ export const Chapter07BirthdayCake: React.FC<Chapter07Props> = ({ onContinue }) 
     }, 600);
   };
 
-  // Optional microphone route
+  // Microphone route (visible by default)
   const handleToggleMic = async () => {
+    if (!microphoneService.isSupported()) {
+      hapticsService.light();
+      setMicNotice(
+        typeof window !== 'undefined' && !window.isSecureContext
+          ? 'Microphone requires HTTPS on mobile. Blowing candles for you now!'
+          : 'Microphone is not supported in this browser. Blowing candles now!'
+      );
+      setTimeout(() => {
+        executeBlowSequence();
+      }, 700);
+      return;
+    }
+
     if (micState.listening) {
       microphoneService.stopListening();
       setMicState((prev) => ({ ...prev, listening: false }));
       return;
     }
 
+    setMicNotice(null);
     const started = await microphoneService.startListening(
       () => {
         executeBlowSequence();
@@ -97,6 +112,7 @@ export const Chapter07BirthdayCake: React.FC<Chapter07Props> = ({ onContinue }) 
   const handleRelight = () => {
     hapticsService.light();
     setCakeState('LIT_READY');
+    setMicNotice(null);
     setMicState({
       listening: false,
       permissionDenied: false,
@@ -441,65 +457,69 @@ export const Chapter07BirthdayCake: React.FC<Chapter07Props> = ({ onContinue }) 
                 <span>{BIRTHDAY.story.ch07.blowTapText}</span>
               </button>
 
-              {/* Optional Microphone Blow Button */}
-              {microphoneService.isSupported() && (
-                <div style={{ width: '100%' }}>
-                  <button
-                    type="button"
-                    onClick={handleToggleMic}
+              {/* Microphone Blow Button (Visible by default) */}
+              <div style={{ width: '100%' }}>
+                <button
+                  type="button"
+                  onClick={handleToggleMic}
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 'var(--text-xs)',
+                    color: micState.listening ? 'var(--gold)' : 'rgba(245, 239, 231, 0.75)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                    width: '100%',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '0.4rem'
+                  }}
+                >
+                  <Mic size={14} color={micState.listening ? 'var(--gold)' : 'currentColor'} />
+                  <span>
+                    {micState.listening
+                      ? 'Listening for breath... (blow gently into mic)'
+                      : 'Or use your microphone to blow'}
+                  </span>
+                </button>
+
+                {/* Mic blow energy feedback meter */}
+                {micState.listening && (
+                  <div
                     style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: 'var(--text-xs)',
-                      color: micState.listening ? 'var(--gold)' : 'rgba(245, 239, 231, 0.65)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.4rem',
                       width: '100%',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '0.4rem'
+                      height: '4px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '2px',
+                      marginTop: '0.4rem',
+                      overflow: 'hidden'
                     }}
                   >
-                    <Mic size={14} color={micState.listening ? 'var(--gold)' : 'currentColor'} />
-                    <span>
-                      {micState.listening
-                        ? 'Listening for breath... (blow gently into mic)'
-                        : 'Or use your microphone to blow'}
-                    </span>
-                  </button>
-
-                  {/* Mic blow energy feedback meter */}
-                  {micState.listening && (
                     <div
                       style={{
-                        width: '100%',
-                        height: '4px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        borderRadius: '2px',
-                        marginTop: '0.4rem',
-                        overflow: 'hidden'
+                        width: `${Math.round(micState.confidence * 100)}%`,
+                        height: '100%',
+                        backgroundColor: 'var(--gold)',
+                        transition: 'width 0.08s linear'
                       }}
-                    >
-                      <div
-                        style={{
-                          width: `${Math.round(micState.confidence * 100)}%`,
-                          height: '100%',
-                          backgroundColor: 'var(--gold)',
-                          transition: 'width 0.08s linear'
-                        }}
-                      />
-                    </div>
-                  )}
+                    />
+                  </div>
+                )}
 
-                  {micState.permissionDenied && (
-                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--blush)', marginTop: '0.4rem' }}>
-                      Microphone permission was not granted. Please tap the button above to blow!
-                    </p>
-                  )}
-                </div>
-              )}
+                {micNotice && (
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--gold)', marginTop: '0.4rem' }}>
+                    {micNotice}
+                  </p>
+                )}
+
+                {micState.permissionDenied && (
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--blush)', marginTop: '0.4rem' }}>
+                    Microphone permission was not granted. Tap above to blow!
+                  </p>
+                )}
+              </div>
             </>
           )}
 

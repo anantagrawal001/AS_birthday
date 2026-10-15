@@ -95,17 +95,12 @@ export const Chapter06OrdinaryDays: React.FC = () => {
             return (
               <div
                 key={mem.id}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                  gap: 'clamp(1.5rem, 4vw, 3rem)',
-                  alignItems: 'center'
-                }}
+                className={`chapter06-card ${isReversed ? 'reversed' : ''}`}
               >
                 {/* Main Photo Card */}
                 <div
+                  className="chapter06-photo"
                   style={{
-                    order: isReversed ? 2 : 1,
                     position: 'relative'
                   }}
                 >
@@ -176,8 +171,8 @@ export const Chapter06OrdinaryDays: React.FC = () => {
 
                 {/* Editorial Caption Side */}
                 <div
+                  className="chapter06-caption"
                   style={{
-                    order: isReversed ? 1 : 2,
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.75rem',

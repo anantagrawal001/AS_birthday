@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BIRTHDAY } from '../content/config';
 import { PhotoPicture } from '../components/PhotoPicture';
 import { PhotoLightbox } from '../components/PhotoLightbox';
@@ -8,13 +8,36 @@ import { audioService } from '../services/audioService';
 
 export const Chapter04FairyLights: React.FC = () => {
   const [selectedPhotoTag, setSelectedPhotoTag] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const photoTags = BIRTHDAY.story.ch04.photoTags;
 
-  // Split the 10 photos across 3 sagging string tiers (3 on tier 1, 4 on tier 2, 3 on tier 3)
-  const tier1Photos = photoTags.slice(0, 3);
-  const tier2Photos = photoTags.slice(3, 7);
-  const tier3Photos = photoTags.slice(7, 10);
+  // Split photos across tiers:
+  // On mobile: 5 rows of 2 photos each, so every row has flex-wrap: nowrap and its own wire directly above it.
+  // On desktop: 3 tiers of 3, 4, 3 photos.
+  const tiers = isMobile
+    ? [
+        photoTags.slice(0, 2),
+        photoTags.slice(2, 4),
+        photoTags.slice(4, 6),
+        photoTags.slice(6, 8),
+        photoTags.slice(8, 10)
+      ]
+    : [
+        photoTags.slice(0, 3),
+        photoTags.slice(3, 7),
+        photoTags.slice(7, 10)
+      ];
 
   const handlePhotoClick = (tag: string) => {
     hapticsService.light();
@@ -50,7 +73,8 @@ export const Chapter04FairyLights: React.FC = () => {
           marginTop: '18px',
           transform: `rotate(${angle}deg)`,
           transition: 'transform 0.3s ease, filter 0.3s ease',
-          animation: `subtleSway ${4 + delay}s ease-in-out infinite alternate`
+          animation: `subtleSway ${4 + delay}s ease-in-out infinite alternate`,
+          ['--angle' as string]: `${angle}deg`
         }}
       >
         {/* Clip (clothes pin / metallic clip graphic) */}
@@ -86,7 +110,7 @@ export const Chapter04FairyLights: React.FC = () => {
           onClick={() => handlePhotoClick(tag)}
           aria-label={`View photograph: ${photo.alt}`}
           style={{
-            padding: '8px 8px 22px 8px',
+            padding: isMobile ? '6px 6px 16px 6px' : '8px 8px 22px 8px',
             backgroundColor: '#FFFFFF',
             borderRadius: '2px',
             boxShadow:
@@ -96,7 +120,7 @@ export const Chapter04FairyLights: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: 'clamp(140px, 22vw, 210px)',
+            width: isMobile ? 'clamp(120px, 42vw, 160px)' : 'clamp(140px, 22vw, 210px)',
             transition: 'transform 0.2s ease, box-shadow 0.2s ease'
           }}
         >
@@ -121,9 +145,9 @@ export const Chapter04FairyLights: React.FC = () => {
           <span
             style={{
               fontFamily: 'var(--font-hand)',
-              fontSize: '1rem',
+              fontSize: isMobile ? '0.85rem' : '1rem',
               color: '#5C5454',
-              marginTop: '6px',
+              marginTop: '5px',
               lineHeight: 1
             }}
           >
@@ -137,10 +161,11 @@ export const Chapter04FairyLights: React.FC = () => {
   const renderStringWire = (photos: string[], seed: number) => {
     return (
       <div
+        key={`wire-${seed}`}
         style={{
           position: 'relative',
           width: '100%',
-          paddingBottom: '2.5rem'
+          paddingBottom: isMobile ? '1.5rem' : '2.5rem'
         }}
       >
         {/* Sagging String Wire SVG */}
@@ -173,11 +198,14 @@ export const Chapter04FairyLights: React.FC = () => {
             strokeWidth="2"
           />
 
-          {/* Warm Amber Bulbs along the wire */}
+          {/* Warm Amber Bulbs along the wire with star-like twinkling animation */}
           {[100, 220, 360, 500, 640, 780, 900].map((cx, idx) => {
             // Calculate y position on quadratic bezier curve: y = 22 + 40 * (1 - ((x-500)/500)^2)
             const normX = (cx - 500) / 500;
             const cy = 22 + 40 * (1 - normX * normX);
+
+            const animDuration = 1.8 + ((idx * 3 + seed * 2) % 4) * 0.5;
+            const animDelay = (idx * 0.5 + seed * 0.7) % 2.5;
 
             return (
               <g key={idx}>
@@ -190,40 +218,58 @@ export const Chapter04FairyLights: React.FC = () => {
                   fill="#332B25"
                   rx="1"
                 />
-                {/* Outer Glow */}
-                <circle
-                  cx={cx}
-                  cy={cy + 7}
-                  r="14"
-                  fill="rgba(255, 204, 128, 0.28)"
-                  filter="blur(4px)"
-                />
-                {/* Bulb Glass */}
-                <circle
-                  cx={cx}
-                  cy={cy + 7}
-                  r="5"
-                  fill="#FFE082"
-                  stroke="#FFD54F"
-                  strokeWidth="0.8"
-                />
+                {/* Twinkling Star/Bulb Glow */}
+                <g
+                  className="fairy-bulb-twinkle"
+                  style={{
+                    animationDuration: `${animDuration}s`,
+                    animationDelay: `${animDelay}s`
+                  }}
+                >
+                  <circle
+                    cx={cx}
+                    cy={cy + 7}
+                    r="15"
+                    fill="rgba(255, 215, 120, 0.35)"
+                    filter="blur(4px)"
+                  />
+                  <circle
+                    cx={cx}
+                    cy={cy + 7}
+                    r="5.5"
+                    fill="#FFE082"
+                    stroke="#FFD54F"
+                    strokeWidth="0.8"
+                  />
+                  {/* Star sparkle center */}
+                  <circle
+                    cx={cx}
+                    cy={cy + 7}
+                    r="2"
+                    fill="#FFFFFF"
+                    opacity="0.9"
+                  />
+                </g>
               </g>
             );
           })}
         </svg>
 
-        {/* Clipped Photos Container along the string */}
+        {/* Clipped Photos Container along the string - flexWrap: 'nowrap' ensures every photo stays under the wire */}
         <div
           style={{
             position: 'relative',
             zIndex: 2,
             display: 'flex',
             justifyContent: 'space-around',
-            flexWrap: 'wrap',
-            gap: '1rem',
+            alignItems: 'flex-start',
+            flexWrap: 'nowrap',
+            gap: isMobile ? '0.75rem' : '1.5rem',
             paddingTop: '20px',
-            paddingLeft: '1rem',
-            paddingRight: '1rem'
+            paddingLeft: isMobile ? '0.5rem' : '1.5rem',
+            paddingRight: isMobile ? '0.5rem' : '1.5rem',
+            width: '100%',
+            boxSizing: 'border-box'
           }}
         >
           {photos.map((tag, idx) => {
@@ -323,19 +369,17 @@ export const Chapter04FairyLights: React.FC = () => {
         </p>
       </div>
 
-      {/* The 3 Sagging Fairy Light Strings */}
+      {/* The Sagging Fairy Light Strings (Responsively 5 rows of 2 on mobile, 3 rows on desktop) */}
       <div
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
-          gap: 'clamp(2rem, 4vw, 4rem)'
+          gap: isMobile ? '2.5rem' : 'clamp(2rem, 4vw, 4rem)'
         }}
       >
-        {renderStringWire(tier1Photos, 0)}
-        {renderStringWire(tier2Photos, 1)}
-        {renderStringWire(tier3Photos, 2)}
+        {tiers.map((photos, tierIdx) => renderStringWire(photos, tierIdx))}
       </div>
 
       {/* Lightbox Modal */}
